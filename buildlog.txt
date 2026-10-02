@@ -1,0 +1,51 @@
+
+> kalulini-boys-high-school@1.0.0 build
+> next build
+
+  ▲ Next.js 14.2.35
+  - Environments: .env.local
+
+   Creating an optimized production build ...
+<w> [webpack.cache.PackFileCacheStrategy/webpack.FileSystemInfo] Resolving '../../../typescript/lib/typescript' in c:\school mgmt.system\node_modules\next\dist\build for build dependencies doesn't lead to expected result 'C:\school mgmt.system\node_modules\typescript\lib\typescript.js', but to 'c:\school mgmt.system\node_modules\typescript\lib\typescript.js' instead. Resolving dependencies are ignored for this path.
+<w>  at resolve commonjs file ../../../typescript/lib/typescript (expected C:\school mgmt.system\node_modules\typescript\lib\typescript.js)
+<w>  at file dependencies c:\school mgmt.system\node_modules\next\dist\build\load-jsconfig.js
+<w>  at file c:\school mgmt.system\node_modules\next\dist\build\load-jsconfig.js
+<w>  at file dependencies c:\school mgmt.system\node_modules\next\dist\build\webpack-config.js
+<w>  at file c:\school mgmt.system\node_modules\next\dist\build\webpack-config.js
+<w>  at file dependencies c:\school mgmt.system\node_modules\next\dist\build\webpack\loaders\next-swc-loader.js
+<w>  at file c:\school mgmt.system\node_modules\next\dist\build\webpack\loaders\next-swc-loader.js
+<w>  at resolve commonjs c:\school mgmt.system\node_modules\next\dist\build\webpack\loaders\next-swc-loader.js
+Failed to compile.
+
+src\app\(portal)\page.tsx
+You cannot have two parallel pages that resolve to the same path. Please check /(portal)/page and /(public)/page. Refer to the route group docs for more information: https://nextjs.org/docs/app/building-your-application/routing/route-groups
+
+src\app\(public)\page.tsx
+You cannot have two parallel pages that resolve to the same path. Please check /(portal)/page and /(public)/page. Refer to the route group docs for more information: https://nextjs.org/docs/app/building-your-application/routing/route-groups
+
+src\app\page.tsx
+You cannot have two parallel pages that resolve to the same path. Please check /(portal)/page and /(public)/page. Refer to the route group docs for more information: https://nextjs.org/docs/app/building-your-application/routing/route-groups
+
+./src/components/public/Navbar.tsx
+Error: 
+  [31mx[0m Unexpected token `Link`. Expected jsx identifier
+     ,-[[36;1;4mc:\school mgmt.system\src\components\public\Navbar.tsx[0m:120:1]
+ [2m120[0m |     </header>
+ [2m121[0m |   );
+ [2m122[0m | };
+ [2m123[0m |               <Link
+     : [31;1m               ^^^^[0m
+ [2m124[0m |                 href="/login"
+ [2m125[0m |                 onClick={closeMenus}
+ [2m126[0m |                 className="w-full text-center py-2.5 rounded-lg bg-aqua-600 hover:bg-aqua-700 text-white font-bold text-sm flex items-center justify-center gap-2"
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/components/public/Navbar.tsx
+./src/app/downloads/page.tsx
+
+
+> Build failed because of webpack errors

@@ -1,0 +1,81 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #f8fafc;
+  --foreground: #3f3f3f;
+  --aqua: #00BFFF;
+  --charcoal: #1F1F1F;
+  --grey: #A9A9A9;
+  --gold: #FFD700;
+}
+
+.dark {
+  --background: #111827;
+  --foreground: #f8fafc;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@keyframes galleryFade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes tourFadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  @keyframes galleryFade {
+    from { opacity: 0.65; }
+    to { opacity: 1; }
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-inter), sans-serif;
+}
+
+a:focus-visible {
+  outline: 2px solid #00a8d6;
+  outline-offset: 3px;
+}
+
+a:not([class*="bg-"]):hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@layer base {
+  * {
+    @apply border-slate-200;
+  }
+
+  body {
+    @apply antialiased;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .bg-grid-pattern {
+    background-image:
+      linear-gradient(to right, rgba(255,255,255,0.08) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255,255,255,0.08) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+}
