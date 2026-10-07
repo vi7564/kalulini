@@ -22,6 +22,8 @@ export const Navbar: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const { currentUser } = useAuth();
 
   useEffect(() => {
@@ -82,7 +84,7 @@ export const Navbar: React.FC = () => {
           </nav>
 
           <div className="hidden items-center gap-3 lg:flex">
-            <button className="rounded-lg p-2 text-slate-600 transition hover:bg-slate-100 hover:text-aqua" aria-label="Search"><Search className="h-4 w-4" /></button>
+            <button onClick={() => setSearchOpen(true)} className="rounded-lg p-2 text-slate-600 transition hover:bg-slate-100 hover:text-aqua" aria-label="Search"><Search className="h-4 w-4" /></button>
             <Link href="/admissions/apply" className="rounded-lg bg-gold px-4 py-2 text-xs font-bold uppercase tracking-wide text-charcoal transition hover:brightness-95">Apply</Link>
             <Link href={currentUser ? '/portal' : '/login'} className="inline-flex items-center gap-2 rounded-lg bg-aqua px-4 py-2 text-xs font-bold uppercase tracking-wide text-white transition hover:brightness-110">
               <LogIn className="h-4 w-4" />
@@ -91,7 +93,7 @@ export const Navbar: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-2 lg:hidden">
-            <button className="rounded-lg p-2 text-slate-600 transition hover:bg-slate-100 hover:text-aqua" aria-label="Search"><Search className="h-5 w-5" /></button>
+            <button onClick={() => setSearchOpen(true)} className="rounded-lg p-2 text-slate-600 transition hover:bg-slate-100 hover:text-aqua" aria-label="Search"><Search className="h-5 w-5" /></button>
             <button
               onClick={() => setMobileMenuOpen((prev) => !prev)}
               className="rounded-lg p-2 text-slate-700 transition hover:bg-slate-100 hover:text-aqua"
@@ -113,24 +115,10 @@ export const Navbar: React.FC = () => {
             <Link href="/facilities" onClick={closeMenus} className="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Facilities</Link>
             <Link href="/news" onClick={closeMenus} className="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">News</Link>
             <Link href="/events" onClick={closeMenus} className="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Events</Link>
-            <Link href="/login" onClick={closeMenus} className="mt-2 inline-flex items-center justify-center gap-2 rounded-lg bg-aqua px-4 py-3 text-sm font-bold uppercase tracking-wide text-white"> <ShieldCheck className="h-4 w-4" /> Student Portal </Link>
+            <Link href={currentUser ? '/portal' : '/login'} onClick={closeMenus} className="mt-2 inline-flex items-center justify-center gap-2 rounded-lg bg-aqua px-4 py-3 text-sm font-bold uppercase tracking-wide text-white"> <ShieldCheck className="h-4 w-4" /> {currentUser ? 'Open Portal' : 'Student Portal'} </Link>
           </div>
         </div>
       )}
-    </header>
-  );
-};
-              <Link
-                href="/login"
-                onClick={closeMenus}
-                className="w-full text-center py-2.5 rounded-lg bg-aqua-600 hover:bg-aqua-700 text-white font-bold text-sm flex items-center justify-center gap-2"
-              >
-                <LogIn className="w-4 h-4" /> School Portal Login
-              </Link>
-            </div>
-          </div>
-        )}
-      </header>
 
       {/* Public Global Search Modal */}
       {searchOpen && (
@@ -194,6 +182,6 @@ export const Navbar: React.FC = () => {
           </div>
         </div>
       )}
-    </>
+    </header>
   );
 };

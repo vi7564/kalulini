@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { PortalLayout } from '@/components/portal/PortalLayout';
 import { RouteGuard } from '@/components/portal/RouteGuard';
-import { Mail, Send, PencilLine, X, CheckDouble, CircleDot } from 'lucide-react';
+import { Mail, Send, PencilLine, X, CheckCheck, CircleDot } from 'lucide-react';
 
 const inbox = [
   { id: 1, sender: 'Class Teacher', subject: 'Revision reminder', preview: 'Your Physics revision plan is due before Friday.', time: '09:12 AM', unread: true },
@@ -14,8 +14,8 @@ const inbox = [
 ];
 
 const sent = [
-  { id: 5, sender: 'You', subject: 'Request for extra math session', preview: 'Kindly confirm a make-up session for Friday.', time: '08:10 AM' },
-  { id: 6, sender: 'You', subject: 'Parent reminder', preview: 'I will be attending the science fair this weekend.', time: 'Yesterday' }
+  { id: 5, sender: 'You', subject: 'Request for extra math session', preview: 'Kindly confirm a make-up session for Friday.', time: '08:10 AM', unread: false },
+  { id: 6, sender: 'You', subject: 'Parent reminder', preview: 'I will be attending the science fair this weekend.', time: 'Yesterday', unread: false }
 ];
 
 export default function StudentMessagesPage() {
@@ -68,7 +68,7 @@ export default function StudentMessagesPage() {
                   <span>{message.time}</span>
                   {tab === 'inbox' && message.unread && (
                     <button type="button" onClick={() => markAsRead(message.id)} className="inline-flex items-center gap-1 rounded-lg bg-emerald-100 px-2 py-1 font-semibold text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300">
-                      <CheckDouble className="h-3 w-3" /> Read
+                      <CheckCheck className="h-3 w-3" /> Read
                     </button>
                   )}
                 </div>

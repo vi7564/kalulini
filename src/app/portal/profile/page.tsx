@@ -34,8 +34,7 @@ export default function PortalProfilePage() {
       displayName: form.displayName,
       email: form.email,
       phoneNumber: form.phoneNumber,
-      role: form.role as any,
-      updatedAt: new Date().toISOString()
+      photoURL: currentUser?.photoURL
     });
     showToast('success', 'Profile saved', 'Your portal profile was updated successfully.');
   };
@@ -92,7 +91,7 @@ export default function PortalProfilePage() {
                 <span>Role</span>
                 <select
                   value={form.role}
-                  onChange={(event) => setForm((prev) => ({ ...prev, role: event.target.value }))}
+                  onChange={(event) => setForm((prev) => ({ ...prev, role: event.target.value as typeof prev.role }))}
                   className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-aqua-500 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
                 >
                   <option value="STUDENT">Student</option>

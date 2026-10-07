@@ -1,18 +1,17 @@
 'use client';
 
 import * as React from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
+import { motion, useReducedMotion, type HTMLMotionProps } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
-export interface RevealProps extends React.HTMLAttributes<HTMLDivElement> {
-  as?: keyof JSX.IntrinsicElements;
+export interface RevealProps extends Omit<HTMLMotionProps<'div'>, 'children'> {
+  children: React.ReactNode;
   delay?: number;
   y?: number;
   once?: boolean;
 }
 
 export function Reveal({
-  as: Component = 'div',
   children,
   className,
   delay = 0,
@@ -24,7 +23,6 @@ export function Reveal({
 
   return (
     <motion.div
-      as={Component}
       initial={reduceMotion ? false : { opacity: 0, y }}
       whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
       viewport={{ once, amount: 0.2 }}

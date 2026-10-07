@@ -5,6 +5,7 @@ import {
   onIdTokenChanged,
   signInWithEmailAndPassword,
   signOut as fbSignOut,
+  updateEmail,
   updateProfile,
   type User,
 } from 'firebase/auth';
@@ -12,7 +13,7 @@ import { doc, getDoc, setDoc } from 'firebase/firestore';
 import type { UserProfile, UserRole } from '@/types';
 import { auth, db, firebaseConfigured } from '@/lib/firebase';
 
-type EditableProfile = Pick<UserProfile, 'displayName' | 'phoneNumber' | 'photoURL'>;
+type EditableProfile = Pick<UserProfile, 'displayName' | 'email' | 'phoneNumber' | 'photoURL'>;
 
 interface AuthContextType {
   currentUser: UserProfile | null;

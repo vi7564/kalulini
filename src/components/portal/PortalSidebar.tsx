@@ -42,7 +42,7 @@ interface PortalSidebarProps {
 
 export const PortalSidebar: React.FC<PortalSidebarProps> = ({ collapsed, onToggle }) => {
   const pathname = usePathname();
-  const { currentUser, logout, loginAsRole } = useAuth();
+  const { currentUser, logout } = useAuth();
   const role = currentUser?.role || 'STUDENT';
 
   const commonNav: NavItem[] = [
@@ -105,6 +105,7 @@ export const PortalSidebar: React.FC<PortalSidebarProps> = ({ collapsed, onToggl
   const roleLabels: Record<UserRole, { label: string; color: string }> = {
     SUPER_ADMIN: { label: 'Super Admin', color: 'bg-rose-500/20 text-rose-300 border-rose-500/30' },
     ADMIN: { label: 'Administrator', color: 'bg-aqua-500/20 text-aqua-300 border-aqua-500/30' },
+    PRINCIPAL: { label: 'Principal', color: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30' },
     TEACHER: { label: 'Teacher', color: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30' },
     STUDENT: { label: 'Student', color: 'bg-blue-500/20 text-blue-300 border-blue-500/30' },
     PARENT: { label: 'Parent', color: 'bg-purple-500/20 text-purple-300 border-purple-500/30' },
@@ -148,17 +149,9 @@ export const PortalSidebar: React.FC<PortalSidebarProps> = ({ collapsed, onToggl
               {roleLabels[role].label}
             </span>
           </div>
-          <select
-            value={role}
-            onChange={(e) => loginAsRole(e.target.value as UserRole)}
-            className="w-full rounded-xl border border-slate-700 bg-slate-900 px-2.5 py-2 text-[10px] text-slate-200 outline-none transition focus:border-aqua-500"
-          >
-            <option value="ADMIN">Administrator</option>
-            <option value="TEACHER">Teacher</option>
-            <option value="STUDENT">Student</option>
-            <option value="PARENT">Parent</option>
-            <option value="APPLICANT">Applicant</option>
-          </select>
+          <div className="rounded-xl border border-slate-700 bg-slate-900 px-2.5 py-2 text-[10px] text-slate-300">
+            Authenticated as {roleLabels[role].label}
+          </div>
         </div>
       )}
 

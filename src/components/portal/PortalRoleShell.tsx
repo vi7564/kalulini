@@ -165,7 +165,6 @@ export function PortalRoleShell({ role, children }: { role: DashboardRole; child
                 subtitle="Academic Year 2026 · Term 1"
                 theme={theme}
                 onToggleTheme={contextValue.toggleTheme}
-                onOpenCommand={contextValue.openSearch}
               />
               <main className="min-h-0 flex-1 overflow-y-auto p-4 pb-24 md:p-6 md:pb-6 lg:p-8">
                 <div className="mx-auto w-full max-w-7xl space-y-6"><PortalRootDashboard role={role} /></div>
