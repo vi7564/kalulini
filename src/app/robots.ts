@@ -1,0 +1,12 @@
+import type { MetadataRoute } from 'next';
+
+export default function robots(): MetadataRoute.Robots {
+  return {
+    rules: {
+      userAgent: '*',
+      allow: '/',
+      disallow: ['/api/', '/portal', '/login', '/signup'],
+    },
+    sitemap: 'https://kaluliniboys.ac.ke/sitemap.xml',
+  };
+}

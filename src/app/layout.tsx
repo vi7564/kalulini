@@ -17,6 +17,7 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://kaluliniboys.ac.ke'),
   title: 'Kalulini Boys High School | Official Website & Management System',
   description: 'Official institutional portal and school management platform for Kalulini Boys High School, Makueni County, Kenya. Academic excellence, admissions, KCSE performance, student portal, and administration.',
   keywords: [
@@ -28,6 +29,17 @@ export const metadata: Metadata = {
     'School Management System'
   ],
   authors: [{ name: 'Kalulini Boys High School' }],
+  alternates: {
+    canonical: '/',
+  },
+  icons: {
+    icon: '/favicon.svg',
+    shortcut: '/favicon.svg',
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
   openGraph: {
     title: 'Kalulini Boys High School — Strive for Excellence, Integrity and Service',
     description: 'Premier Extra-County Boys High School in Makueni County, Kenya.',
@@ -35,6 +47,18 @@ export const metadata: Metadata = {
     siteName: 'Kalulini Boys High School',
     locale: 'en_KE',
     type: 'website',
+    images: [{
+      url: '/image1.webp',
+      width: 1442,
+      height: 1091,
+      alt: 'Kalulini Boys High School campus and students',
+    }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Kalulini Boys High School',
+    description: 'Official website of Kalulini Boys High School in Kibwezi, Makueni County, Kenya.',
+    images: ['/image1.webp'],
   },
 };
 

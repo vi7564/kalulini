@@ -1,0 +1,37 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    function activePortalUser() {
+      return request.auth != null
+        && firestore.exists(/databases/(default)/documents/users/$(request.auth.uid))
+        && firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.status == 'active'
+        && firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.role == request.auth.token.role;
+    }
+
+    function isSchoolAdmin() {
+      return activePortalUser()
+        && request.auth.token.role in ['ADMIN', 'SUPER_ADMIN', 'PRINCIPAL'];
+    }
+
+    function isValidAdmissionFile() {
+      return request.resource.size > 0
+        && request.resource.size <= 5 * 1024 * 1024
+        && request.resource.contentType in ['application/pdf', 'image/jpeg', 'image/png'];
+    }
+
+    match /admissions/{userId}/{applicationId}/{fileName} {
+      allow read: if request.auth != null
+        && activePortalUser()
+        && (request.auth.uid == userId && request.auth.token.role == 'APPLICANT' || isSchoolAdmin());
+      allow create, update: if request.auth != null
+        && activePortalUser()
+        && request.auth.token.role == 'APPLICANT'
+        && request.auth.uid == userId
+        && fileName.matches('^(birth-certificate|kcpe-result-slip)\\.(pdf|jpg|jpeg|png)$')
+        && isValidAdmissionFile();
+      allow delete: if request.auth != null
+        && activePortalUser()
+        && request.auth.uid == userId;
+    }
+  }
+}

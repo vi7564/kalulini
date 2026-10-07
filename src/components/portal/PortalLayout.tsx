@@ -1,11 +1,8 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { usePathname } from 'next/navigation';
 import { PortalSidebar } from './PortalSidebar';
 import { PortalHeader } from './PortalHeader';
-import { usePortalRoleContext } from './PortalRoleShell';
-import { PortalRootDashboard } from './PortalRootDashboard';
 
 interface PortalLayoutProps {
   children: React.ReactNode;
@@ -14,8 +11,6 @@ interface PortalLayoutProps {
 }
 
 export const PortalLayout: React.FC<PortalLayoutProps> = ({ children, title, subtitle }) => {
-  const roleShell = usePortalRoleContext();
-  const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
 
@@ -40,26 +35,6 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({ children, title, sub
   useEffect(() => {
     localStorage.setItem('kbhs-portal-sidebar', String(collapsed));
   }, [collapsed]);
-
-  if (roleShell) {
-    return (
-      <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
-        <PortalHeader
-          title={title}
-          subtitle={subtitle}
-          theme={roleShell.theme}
-          onToggleTheme={roleShell.toggleTheme}
-          onOpenCommand={roleShell.openSearch}
-        />
-        <main className="min-h-0 flex-1 overflow-y-auto p-4 pb-24 md:p-6 md:pb-6 lg:p-8">
-          <div className="mx-auto w-full max-w-7xl space-y-6">
-            {pathname === roleShell.homePath && <PortalRootDashboard role={roleShell.role} />}
-            {children}
-          </div>
-        </main>
-      </div>
-    );
-  }
 
   return (
     <div className={`min-h-screen bg-slate-100 text-slate-900 transition-colors duration-300 dark:bg-slate-950 dark:text-slate-100`}>

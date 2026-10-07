@@ -1,7 +1,7 @@
 import { GradeRecord, StudentReportCard, Subject, Department } from '@/types';
 import { SAMPLE_STUDENT_GRADES, SUBJECTS_DATA, DEPARTMENTS_DATA, INITIAL_STUDENTS } from '@/lib/mockData';
-import { db } from '@/lib/firebase';
-import { collection, getDocs, addDoc } from 'firebase/firestore';
+import { auth, db } from '@/lib/firebase';
+import { collection, getDocs, addDoc, query, where } from 'firebase/firestore';
 
 let memoryGrades: GradeRecord[] = [...SAMPLE_STUDENT_GRADES];
 
@@ -15,23 +15,50 @@ export const academicService = {
   },
 
   async getGradesByStudent(studentId: string): Promise<GradeRecord[]> {
-    return memoryGrades.filter((g) => g.studentId === studentId);
+    if (!db) return memoryGrades.filter((grade) => grade.studentId === studentId);
+
+    const claims = (await auth?.currentUser?.getIdTokenResult())?.claims;
+    if (!claims) throw new Error('Sign in to access grade records.');
+    const role = claims?.role;
+    const grades = collection(db, 'grades');
+    let querySnapshot;
+
+    if (role === 'ADMIN' || role === 'SUPER_ADMIN' || role === 'PRINCIPAL') {
+      querySnapshot = await getDocs(query(grades, where('studentId', '==', studentId)));
+    } else if (
+      (role === 'STUDENT' || role === 'PARENT')
+      && claims.studentId === studentId
+    ) {
+      querySnapshot = await getDocs(query(grades, where('studentId', '==', studentId)));
+    } else if (role === 'TEACHER' && typeof claims.teacherId === 'string') {
+      const assignedClasses = claims.assignedClasses;
+      if (!Array.isArray(assignedClasses) || assignedClasses.length === 0) {
+        throw new Error('No classes are assigned to this teacher account.');
+      }
+      querySnapshot = await getDocs(query(
+        grades,
+        where('studentId', '==', studentId),
+        where('enteredByTeacherId', '==', claims.teacherId),
+        where('classKey', 'in', assignedClasses),
+      ));
+    } else {
+      throw new Error('Your role is not allowed to read these grade records.');
+    }
+
+    return querySnapshot.docs.map((docSnap) => ({ id: docSnap.id, ...docSnap.data() }) as GradeRecord);
   },
 
   async addGradeRecord(record: Omit<GradeRecord, 'id' | 'updatedAt'>): Promise<GradeRecord> {
     const newGrade: GradeRecord = {
       ...record,
+      classKey: record.classKey || `${record.form} ${record.stream}`,
       id: 'grd-' + Date.now(),
       updatedAt: new Date().toISOString()
     };
 
-    try {
-      if (db && typeof db.app !== 'undefined') {
-        const docRef = await addDoc(collection(db, 'grades'), newGrade);
-        newGrade.id = docRef.id;
-      }
-    } catch (err) {
-      console.warn("Firestore write skipped:", err);
+    if (db) {
+      const docRef = await addDoc(collection(db, 'grades'), newGrade);
+      newGrade.id = docRef.id;
     }
 
     memoryGrades = [newGrade, ...memoryGrades];

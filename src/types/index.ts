@@ -1,6 +1,7 @@
 export type UserRole = 
   | 'SUPER_ADMIN'
   | 'ADMIN'
+  | 'PRINCIPAL'
   | 'TEACHER'
   | 'STUDENT'
   | 'PARENT'
@@ -24,6 +25,7 @@ export interface UserProfile {
 
 export interface Student {
   id: string;
+  classKey?: string;
   admissionNumber: string;
   firstName: string;
   middleName?: string;
@@ -95,6 +97,7 @@ export interface Examination {
 
 export interface GradeRecord {
   id: string;
+  classKey?: string;
   examId: string;
   studentId: string;
   studentName: string;
@@ -143,6 +146,7 @@ export interface StudentReportCard {
 
 export interface AttendanceRecord {
   id: string;
+  classKey?: string;
   date: string; // YYYY-MM-DD
   form: string;
   stream: string;
@@ -301,6 +305,7 @@ export interface FacilityItem {
 
 export interface Assignment {
   id: string;
+  classKey?: string;
   title: string;
   subject: string;
   form: string;

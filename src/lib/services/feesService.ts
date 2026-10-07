@@ -1,27 +1,29 @@
 import { PaymentTransaction } from '@/types';
 import { SAMPLE_PAYMENTS, INITIAL_STUDENTS } from '@/lib/mockData';
-import { db } from '@/lib/firebase';
-import { collection, getDocs, addDoc } from 'firebase/firestore';
+import { auth, db } from '@/lib/firebase';
+import { collection, getDocs, addDoc, query, where } from 'firebase/firestore';
 
 let memoryPayments: PaymentTransaction[] = [...SAMPLE_PAYMENTS];
 
 export const feesService = {
   async getPaymentTransactions(): Promise<PaymentTransaction[]> {
-    try {
-      if (db && typeof db.app !== 'undefined') {
-        const querySnapshot = await getDocs(collection(db, 'payments'));
-        if (!querySnapshot.empty) {
-          const list: PaymentTransaction[] = [];
-          querySnapshot.forEach((docSnap) => {
-            list.push({ id: docSnap.id, ...docSnap.data() } as PaymentTransaction);
-          });
-          return list;
-        }
-      }
-    } catch (err) {
-      console.warn("Firestore error reading payments:", err);
+    if (!db) return memoryPayments;
+
+    const claims = (await auth?.currentUser?.getIdTokenResult())?.claims;
+    if (!claims) throw new Error('Sign in to access payment records.');
+    const role = claims?.role;
+    const payments = collection(db, 'payments');
+    let querySnapshot;
+
+    if (role === 'ADMIN' || role === 'SUPER_ADMIN' || role === 'PRINCIPAL') {
+      querySnapshot = await getDocs(payments);
+    } else if ((role === 'STUDENT' || role === 'PARENT') && typeof claims.studentId === 'string') {
+      querySnapshot = await getDocs(query(payments, where('studentId', '==', claims.studentId)));
+    } else {
+      throw new Error('Your role is not allowed to read payment records.');
     }
-    return memoryPayments;
+
+    return querySnapshot.docs.map((docSnap) => ({ id: docSnap.id, ...docSnap.data() }) as PaymentTransaction);
   },
 
   async getPaymentsByStudentId(studentId: string): Promise<PaymentTransaction[]> {
@@ -38,13 +40,9 @@ export const feesService = {
       receiptNumber
     };
 
-    try {
-      if (db && typeof db.app !== 'undefined') {
-        const docRef = await addDoc(collection(db, 'payments'), newRecord);
-        newRecord.id = docRef.id;
-      }
-    } catch (err) {
-      console.warn("Firestore write skipped:", err);
+    if (db) {
+      const docRef = await addDoc(collection(db, 'payments'), newRecord);
+      newRecord.id = docRef.id;
     }
 
     memoryPayments = [newRecord, ...memoryPayments];

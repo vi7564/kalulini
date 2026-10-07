@@ -1,19 +1,119 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { AnnouncementBar } from '@/components/public/AnnouncementBar';
 import { Navbar } from '@/components/public/Navbar';
 import { Footer } from '@/components/public/Footer';
 import { admissionService } from '@/lib/services/admissionService';
 import { useNotification } from '@/context/NotificationContext';
-import { GraduationCap, ArrowRight, ArrowLeft, CheckCircle2, Upload, ShieldCheck, FileText } from 'lucide-react';
+import { GraduationCap, ArrowRight, ArrowLeft, CheckCircle2, Upload, ShieldCheck, FileText, X } from 'lucide-react';
 import Link from 'next/link';
+import { useAuth } from '@/context/AuthContext';
+import { getAdmissionFileContentType, MAX_ADMISSION_FILE_SIZE, validateAdmissionFile } from './upload-validation.mjs';
+
+type AdmissionDocumentKey = 'birthCertificate' | 'kcpeResultSlip';
+type AdmissionFiles = Record<AdmissionDocumentKey, File | null>;
+type AdmissionFileErrors = Partial<Record<AdmissionDocumentKey, string>>;
+
+function useFilePreview(file: File | null) {
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!file) {
+      setPreviewUrl(null);
+      return;
+    }
+    const objectUrl = URL.createObjectURL(file);
+    setPreviewUrl(objectUrl);
+    return () => URL.revokeObjectURL(objectUrl);
+  }, [file]);
+
+  return previewUrl;
+}
+
+function AdmissionDocumentUpload({
+  documentKey,
+  title,
+  file,
+  error,
+  onSelect,
+  onRemove,
+}: {
+  documentKey: AdmissionDocumentKey;
+  title: string;
+  file: File | null;
+  error?: string;
+  onSelect: (key: AdmissionDocumentKey, file: File | null) => void;
+  onRemove: (key: AdmissionDocumentKey) => void;
+}) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const previewUrl = useFilePreview(file);
+
+  const openPicker = () => inputRef.current?.click();
+
+  return (
+    <section className={`rounded-2xl border-2 border-dashed p-4 text-center transition-colors ${error ? 'border-red-400 bg-red-50/40' : 'border-slate-300 hover:border-aqua-500'}`} aria-labelledby={`${documentKey}-title`}>
+      <input
+        ref={inputRef}
+        type="file"
+        accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png"
+        className="sr-only"
+        aria-label={`Choose ${title} file`}
+        aria-describedby={error ? `${documentKey}-error` : `${documentKey}-help`}
+        onChange={(event) => {
+          onSelect(documentKey, event.target.files?.[0] || null);
+          event.currentTarget.value = '';
+        }}
+      />
+      <button
+        type="button"
+        onClick={openPicker}
+        className="block w-full rounded-xl p-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-700"
+        aria-label={file ? `Replace ${title}` : `Upload ${title}`}
+      >
+        <Upload className="mx-auto mb-2 h-6 w-6 text-aqua-700" aria-hidden="true" />
+        <span id={`${documentKey}-title`} className="block text-xs font-bold text-charcoal-900">{title}</span>
+        <span id={`${documentKey}-help`} className="block text-[10px] text-slate-600">PDF, JPG, PNG (Max 5MB)</span>
+        {file ? (
+          <span className="mt-2 block truncate text-[11px] font-semibold text-slate-800" title={file.name}>{file.name}</span>
+        ) : (
+          <span className="mt-2 block text-[11px] font-semibold text-slate-700">Choose a file</span>
+        )}
+      </button>
+      {file && (
+        <div className="mt-3 space-y-3 border-t border-slate-200 pt-3">
+          {previewUrl && getAdmissionFileContentType(file) === 'application/pdf' && (
+            <iframe src={previewUrl} title={`${title} preview`} className="h-40 w-full rounded-lg border border-slate-300 bg-white" />
+          )}
+          {previewUrl && getAdmissionFileContentType(file).startsWith('image/') && (
+            <img src={previewUrl} alt={`${title} preview`} className="mx-auto max-h-40 max-w-full rounded-lg border border-slate-300 object-contain" />
+          )}
+          <div className="flex flex-wrap justify-center gap-2">
+            <button type="button" onClick={openPicker} className="min-h-9 rounded-lg border border-slate-400 bg-white px-3 py-1.5 text-xs font-semibold text-slate-800 hover:bg-slate-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-aqua-700">
+              Replace file
+            </button>
+            <button type="button" onClick={() => onRemove(documentKey)} className="inline-flex min-h-9 items-center gap-1 rounded-lg border border-red-300 bg-white px-3 py-1.5 text-xs font-semibold text-red-800 hover:bg-red-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-red-700">
+              <X size={14} aria-hidden="true" /> Remove
+            </button>
+          </div>
+          {!error && <p className="rounded bg-emerald-50 py-1 text-[11px] font-semibold text-emerald-800" role="status">✓ Ready for submission</p>}
+        </div>
+      )}
+      {!file && !error && <p className="mt-2 text-[11px] font-medium text-slate-700">A valid file is required</p>}
+      {error && <p id={`${documentKey}-error`} className="mt-2 text-xs font-semibold text-red-800" role="alert">{error}</p>}
+      <span className="sr-only">Maximum size {MAX_ADMISSION_FILE_SIZE / (1024 * 1024)} megabytes.</span>
+    </section>
+  );
+}
 
 export default function ApplyPage() {
   const { showToast } = useNotification();
+  const { currentUser, loading: authLoading } = useAuth();
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submittedRef, setSubmittedRef] = useState<string | null>(null);
+  const [files, setFiles] = useState<AdmissionFiles>({ birthCertificate: null, kcpeResultSlip: null });
+  const [fileErrors, setFileErrors] = useState<AdmissionFileErrors>({});
 
   // Form State
   const [formData, setFormData] = useState({
@@ -46,13 +146,51 @@ export default function ApplyPage() {
     if (step > 1) setStep(step - 1);
   };
 
+  const handleFileSelect = (key: AdmissionDocumentKey, file: File | null) => {
+    if (!file) return;
+    const error = validateAdmissionFile(file);
+    if (error) {
+      setFileErrors((previous) => ({ ...previous, [key]: error }));
+      return;
+    }
+    setFiles((previous) => ({ ...previous, [key]: file }));
+    setFileErrors((previous) => ({ ...previous, [key]: undefined }));
+  };
+
+  const handleFileRemove = (key: AdmissionDocumentKey) => {
+    setFiles((previous) => ({ ...previous, [key]: null }));
+    setFileErrors((previous) => ({ ...previous, [key]: undefined }));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const birthCertificate = files.birthCertificate;
+    const kcpeResultSlip = files.kcpeResultSlip;
+    const missingErrors: AdmissionFileErrors = {};
+    if (!birthCertificate) missingErrors.birthCertificate = 'Select the student’s birth certificate.';
+    if (!kcpeResultSlip) missingErrors.kcpeResultSlip = 'Select the KCPE / KPSEA result slip.';
+    for (const key of ['birthCertificate', 'kcpeResultSlip'] as const) {
+      const file = files[key];
+      if (file) {
+        const validationError = validateAdmissionFile(file);
+        if (validationError) missingErrors[key] = validationError;
+      }
+    }
+    if (Object.keys(missingErrors).length) {
+      setFileErrors(missingErrors);
+      showToast('error', 'Documents required', 'Select a valid birth certificate and KCPE / KPSEA result slip before submitting.');
+      return;
+    }
+    if (!birthCertificate || !kcpeResultSlip) return;
+    if (currentUser?.role !== 'APPLICANT') {
+      showToast('error', 'Applicant sign-in required', 'Sign in with your applicant account to submit the application.');
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
       const application = await admissionService.submitApplication({
-        userId: 'usr-applicant-direct-' + Date.now(),
         applicantFirstName: formData.applicantFirstName,
         applicantLastName: formData.applicantLastName,
         dateOfBirth: formData.dateOfBirth,
@@ -67,17 +205,16 @@ export default function ApplyPage() {
         parentOccupation: formData.parentOccupation,
         homeCounty: formData.homeCounty,
         subCounty: formData.subCounty,
-        documents: {
-          birthCertificateUrl: '#',
-          kcpeResultSlipUrl: '#'
-        }
+      }, {
+        birthCertificate,
+        kcpeResultSlip,
       });
 
       setSubmittedRef(application.applicationReference);
       showToast('success', 'Application Submitted', `Reference: ${application.applicationReference}`);
     } catch (err) {
       console.error(err);
-      showToast('error', 'Submission Failed', 'Please verify your information and retry.');
+      showToast('error', 'Submission Failed', err instanceof Error ? err.message : 'Please verify your information and retry.');
     } finally {
       setIsSubmitting(false);
     }
@@ -104,7 +241,21 @@ export default function ApplyPage() {
           </div>
 
           {/* If already submitted successfully */}
-          {submittedRef ? (
+          {authLoading ? (
+            <div role="status" className="rounded-3xl border border-slate-200 bg-white p-8 text-center text-sm font-semibold text-slate-700 shadow-premium">Checking applicant account…</div>
+          ) : currentUser?.role !== 'APPLICANT' ? (
+            <div className="space-y-5 rounded-3xl border border-slate-200 bg-white p-6 text-center shadow-premium sm:p-10">
+              <ShieldCheck className="mx-auto h-10 w-10 text-aqua-700" aria-hidden="true" />
+              <div>
+                <h2 className="text-xl font-bold text-charcoal-900">Sign in to apply</h2>
+                <p className="mx-auto mt-2 max-w-xl text-sm leading-6 text-slate-700">An applicant account is required to securely upload and save birth certificates and assessment result slips.</p>
+              </div>
+              <div className="flex flex-col justify-center gap-3 sm:flex-row">
+                <Link href="/signup?next=%2Fadmissions%2Fapply" className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-aqua-700 px-5 py-3 text-sm font-bold text-white hover:bg-aqua-800">Create applicant account <ArrowRight size={16} /></Link>
+                <Link href="/login?next=%2Fadmissions%2Fapply" className="inline-flex min-h-11 items-center justify-center rounded-xl border border-slate-400 px-5 py-3 text-sm font-bold text-slate-800 hover:bg-slate-100">Sign in</Link>
+              </div>
+            </div>
+          ) : submittedRef ? (
             <div className="bg-white rounded-3xl p-8 sm:p-12 border border-slate-200 shadow-premium text-center space-y-6 animate-in fade-in zoom-in-95 duration-200">
               <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto">
                 <CheckCircle2 className="w-8 h-8" />
@@ -350,29 +501,28 @@ export default function ApplyPage() {
                 </form>
               )}
 
-              {/* Step 3: Certificate Upload Simulation & Final Review */}
+              {/* Step 3: Certificate Upload & Final Review */}
               {step === 3 && (
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <h3 className="text-sm font-bold text-charcoal-900 border-b pb-2">Documents Upload & Declaration</h3>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="border-2 border-dashed border-slate-300 rounded-2xl p-4 text-center hover:border-aqua-500 transition-colors">
-                      <Upload className="w-6 h-6 text-aqua-600 mx-auto mb-2" />
-                      <span className="text-xs font-bold text-charcoal-900 block">Birth Certificate Scan</span>
-                      <span className="text-[10px] text-slate-500">PDF, JPG, PNG (Max 5MB)</span>
-                      <div className="mt-2 text-[11px] text-emerald-600 font-semibold bg-emerald-50 py-1 rounded">
-                        ✓ Ready for submission
-                      </div>
-                    </div>
-
-                    <div className="border-2 border-dashed border-slate-300 rounded-2xl p-4 text-center hover:border-aqua-500 transition-colors">
-                      <Upload className="w-6 h-6 text-aqua-600 mx-auto mb-2" />
-                      <span className="text-xs font-bold text-charcoal-900 block">KCPE / KPSEA Result Slip</span>
-                      <span className="text-[10px] text-slate-500">PDF, JPG, PNG (Max 5MB)</span>
-                      <div className="mt-2 text-[11px] text-emerald-600 font-semibold bg-emerald-50 py-1 rounded">
-                        ✓ Ready for submission
-                      </div>
-                    </div>
+                    <AdmissionDocumentUpload
+                      documentKey="birthCertificate"
+                      title="Birth Certificate Scan"
+                      file={files.birthCertificate}
+                      error={fileErrors.birthCertificate}
+                      onSelect={handleFileSelect}
+                      onRemove={handleFileRemove}
+                    />
+                    <AdmissionDocumentUpload
+                      documentKey="kcpeResultSlip"
+                      title="KCPE / KPSEA Result Slip"
+                      file={files.kcpeResultSlip}
+                      error={fileErrors.kcpeResultSlip}
+                      onSelect={handleFileSelect}
+                      onRemove={handleFileRemove}
+                    />
                   </div>
 
                   {/* Summary Box */}

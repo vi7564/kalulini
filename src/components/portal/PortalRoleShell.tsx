@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import {
   Activity,
+  BadgeCheck,
   Bell,
   BookOpen,
   ClipboardCheck,
@@ -83,6 +84,7 @@ const roleLinks: Record<DashboardRole, { label: string; href: string; icon: Reac
     { label: 'Students', href: '/portal/admin/students', icon: Users },
     { label: 'Staff', href: '/portal/admin/teachers', icon: GraduationCap },
     { label: 'Admissions', href: '/portal/admin/admissions', icon: FileCheck2 },
+    { label: 'Role requests', href: '/portal/admin/role-requests', icon: BadgeCheck },
     { label: 'Fees & finance', href: '/portal/admin/fees', icon: CreditCard },
     { label: 'Academics', href: '/portal/admin/academics', icon: BookOpen },
     { label: 'Announcements', href: '/portal/admin/announcements', icon: Bell },
@@ -92,10 +94,21 @@ const roleLinks: Record<DashboardRole, { label: string; href: string; icon: Reac
 };
 
 export function PortalRoleShell({ role, children }: { role: DashboardRole; children: React.ReactNode }) {
+  const { currentUser, loading } = useAuth();
+  const router = useRouter();
   const [searchOpen, setSearchOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const pathname = usePathname();
+  const allowedRoles: UserRole[] = role === 'ADMIN'
+    ? ['ADMIN', 'SUPER_ADMIN', 'PRINCIPAL']
+    : [role];
+  const authorized = currentUser !== null && allowedRoles.includes(currentUser.role);
+
+  useEffect(() => {
+    if (!loading && !currentUser) router.replace('/login');
+    else if (!loading && currentUser && !authorized) router.replace('/portal');
+  }, [authorized, currentUser, loading, router]);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('kbhs-portal-theme');
@@ -126,6 +139,14 @@ export function PortalRoleShell({ role, children }: { role: DashboardRole; child
     theme,
     toggleTheme: () => setTheme((previous) => (previous === 'dark' ? 'light' : 'dark')),
   }), [role, theme]);
+
+  if (loading || !authorized) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-slate-950 text-slate-100">
+        <p className="text-sm font-medium text-slate-300">Verifying portal access…</p>
+      </div>
+    );
+  }
 
   return (
     <PortalRoleContext.Provider value={contextValue}>

@@ -25,7 +25,7 @@ export const Footer: React.FC = () => {
   };
 
   return (
-    <footer className="bg-charcoal-900 text-slate-300 border-t-4 border-aqua-600">
+    <footer className="bg-charcoal-900 text-slate-300 border-t-4 border-aqua-600 [&_a]:flex [&_a]:min-h-11 [&_a]:items-center">
       {/* Pre-footer Newsletter & Quick Action */}
       <div className="border-b border-charcoal-800 bg-charcoal-950/60 py-10 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
@@ -94,14 +94,14 @@ export const Footer: React.FC = () => {
                 <MapPin className="w-4 h-4 text-aqua-400 shrink-0 mt-0.5" />
                 <span>P.O. Box 24 - 90130, Kalulini, Makueni County, Kenya</span>
               </div>
-              <div className="flex items-center gap-2.5">
+              <a href="tel:+254792511717" className="flex min-h-11 items-center gap-2.5 rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-400">
                 <Phone className="w-4 h-4 text-aqua-400 shrink-0" />
-                <span>+254 700 000 000 / +254 722 000 000</span>
-              </div>
-              <div className="flex items-center gap-2.5">
+                <span>0792 511 717</span>
+              </a>
+              <a href="mailto:info@kaluliniboys.ac.ke" className="flex min-h-11 items-center gap-2.5 rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua-400">
                 <Mail className="w-4 h-4 text-aqua-400 shrink-0" />
-                <span>info@kaluliniboys.ac.ke / principal@kaluliniboys.ac.ke</span>
-              </div>
+                <span>info@kaluliniboys.ac.ke</span>
+              </a>
               <div className="flex items-center gap-2.5">
                 <Clock className="w-4 h-4 text-aqua-400 shrink-0" />
                 <span>Mon - Fri: 8:00 AM - 5:00 PM (Admin Office)</span>
@@ -122,7 +122,7 @@ export const Footer: React.FC = () => {
               </li>
               <li>
                 <Link href="/sdgs" className="hover:text-white transition-colors">
-                  SDGs
+                  Our Impact
                 </Link>
               </li>
               <li>

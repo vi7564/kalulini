@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { ArrowRight, Award, BookOpen, CalendarDays, CheckCircle2, ChevronLeft, ChevronRight, GraduationCap, Mail, MapPin, Quote, Sparkles, Star } from 'lucide-react';
 import { AnnouncementBar } from '@/components/public/AnnouncementBar';
 import { Footer } from '@/components/public/Footer';
-import { BackToTopButton } from '@/components/public/BackToTopButton';
 import { Navbar } from '@/components/public/Navbar';
 import { AnimatedCounter } from '@/components/ui/AnimatedCounter';
 import { Badge } from '@/components/ui/Badge';
@@ -77,6 +76,10 @@ export default function HomePage() {
 
       <main>
         <section className="relative isolate overflow-hidden bg-charcoal text-white">
+          <div
+            className="absolute inset-0 scale-110 bg-cover bg-center opacity-30"
+            style={{ backgroundImage: "url('https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1600&q=80')", backgroundAttachment: 'fixed' }}
+          />
           <div className="absolute inset-0 bg-gradient-to-r from-charcoal via-charcoal/90 to-charcoal/70" />
 
           <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
@@ -343,7 +346,6 @@ export default function HomePage() {
         </section>
       </main>
 
-      <BackToTopButton />
       <Footer />
     </div>
   );

@@ -1,0 +1,224 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function roleIs(roleName) {
+      return signedIn()
+        && request.auth.token.role == roleName
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == roleName
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.status == 'active';
+    }
+
+    function activeUser() {
+      return signedIn()
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.status == 'active'
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == request.auth.token.role;
+    }
+
+    function isAdmin() {
+      return roleIs('ADMIN') || roleIs('SUPER_ADMIN');
+    }
+
+    function isLeader() {
+      return isAdmin() || roleIs('PRINCIPAL');
+    }
+
+    function isTeacher() {
+      return roleIs('TEACHER')
+        && request.auth.token.teacherId is string;
+    }
+
+    function isLinkedStudent(studentId, studentData) {
+      return (roleIs('STUDENT') || roleIs('PARENT'))
+        && request.auth.token.studentId is string
+        && (
+          request.auth.token.studentId == studentId
+          || (
+            studentData.keys().hasAny(['admissionNumber'])
+            && request.auth.token.studentId == studentData.admissionNumber
+          )
+        );
+    }
+
+    function teacherAssignedClass(data) {
+      return isTeacher()
+        && request.auth.token.assignedClasses is list
+        && data.keys().hasAll(['classKey'])
+        && request.auth.token.assignedClasses.hasAny([data.classKey]);
+    }
+
+    match /users/{userId} {
+      allow read: if isLeader() || (signedIn() && request.auth.uid == userId);
+      allow create: if false;
+      allow update: if isLeader()
+        || (
+          signedIn()
+          && roleIs(resource.data.role)
+          && request.auth.uid == userId
+          && request.resource.data.role == resource.data.role
+          && request.resource.data.uid == resource.data.uid
+          && request.resource.data.email == resource.data.email
+          && request.resource.data.createdAt == resource.data.createdAt
+          && request.resource.data.status == resource.data.status
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['displayName', 'phoneNumber', 'photoURL'])
+        );
+      allow delete: if isAdmin();
+    }
+
+    match /roleRequests/{userId} {
+      allow read: if isAdmin();
+      allow create: if false;
+      allow update, delete: if false;
+    }
+
+    match /students/{studentId} {
+      allow read: if isLeader()
+        || isLinkedStudent(studentId, resource.data)
+        || teacherAssignedClass(resource.data);
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /teachers/{teacherId} {
+      allow read: if isLeader()
+        || (isTeacher() && request.auth.token.teacherId == teacherId);
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /grades/{gradeId} {
+      allow read: if isLeader()
+        || (
+          (roleIs('STUDENT') || roleIs('PARENT'))
+          && request.auth.token.studentId is string
+          && request.auth.token.studentId == resource.data.studentId
+        )
+        || (
+          isTeacher()
+          && request.auth.token.teacherId == resource.data.enteredByTeacherId
+          && teacherAssignedClass(resource.data)
+        );
+      allow create: if isAdmin()
+        || (
+          teacherAssignedClass(request.resource.data)
+          && request.resource.data.enteredByTeacherId == request.auth.token.teacherId
+        );
+      allow update: if isAdmin()
+        || (
+          teacherAssignedClass(resource.data)
+          && teacherAssignedClass(request.resource.data)
+          && resource.data.enteredByTeacherId == request.auth.token.teacherId
+          && request.resource.data.enteredByTeacherId == request.auth.token.teacherId
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['score', 'grade', 'points', 'remarks', 'updatedAt'])
+        );
+      allow delete: if isAdmin();
+    }
+
+    match /attendance/{attendanceId} {
+      allow read: if isLeader()
+        || (
+          (roleIs('STUDENT') || roleIs('PARENT'))
+          && request.auth.token.studentId is string
+          && request.auth.token.studentId == resource.data.studentId
+        )
+        || teacherAssignedClass(resource.data);
+      allow create: if isAdmin()
+        || (
+          teacherAssignedClass(request.resource.data)
+          && request.resource.data.markedByTeacherId == request.auth.token.teacherId
+        );
+      allow update: if isAdmin()
+        || (
+          teacherAssignedClass(resource.data)
+          && teacherAssignedClass(request.resource.data)
+          && resource.data.markedByTeacherId == request.auth.token.teacherId
+          && request.resource.data.markedByTeacherId == request.auth.token.teacherId
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'notes'])
+        );
+      allow delete: if isAdmin();
+    }
+
+    match /assignments/{assignmentId} {
+      allow read: if activeUser();
+      allow create: if isAdmin()
+        || (
+          teacherAssignedClass(request.resource.data)
+          && request.resource.data.teacherId == request.auth.token.teacherId
+        );
+      allow update: if isAdmin()
+        || (
+          teacherAssignedClass(resource.data)
+          && teacherAssignedClass(request.resource.data)
+          && resource.data.teacherId == request.auth.token.teacherId
+          && request.resource.data.teacherId == request.auth.token.teacherId
+        );
+      allow delete: if isAdmin();
+    }
+
+    match /admissions/{applicationId} {
+      allow create: if roleIs('APPLICANT')
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.status in ['Draft', 'Submitted'];
+      allow read: if isLeader()
+        || (roleIs('APPLICANT') && resource.data.userId == request.auth.uid);
+      allow update: if isLeader()
+        || (
+          roleIs('APPLICANT')
+          && resource.data.userId == request.auth.uid
+          && resource.data.status == 'Draft'
+          && request.resource.data.userId == request.auth.uid
+          && request.resource.data.status == 'Draft'
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+            'applicantFirstName',
+            'applicantLastName',
+            'dateOfBirth',
+            'currentSchool',
+            'kcpeIndexNumber',
+            'kcpeMarks',
+            'targetForm',
+            'parentName',
+            'parentPhone',
+            'parentEmail',
+            'parentOccupation',
+            'homeCounty',
+            'subCounty',
+            'documents'
+          ])
+        );
+      allow delete: if isAdmin();
+    }
+
+    match /payments/{paymentId} {
+      allow read: if isLeader()
+        || (
+          (roleIs('STUDENT') || roleIs('PARENT'))
+          && request.auth.token.studentId is string
+          && request.auth.token.studentId == resource.data.studentId
+        );
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /announcements/{announcementId} {
+      allow read: if resource.data.published == true || isLeader();
+      allow create, update, delete: if isLeader();
+    }
+
+    match /auditLogs/{auditLogId} {
+      allow read: if isLeader();
+      allow create: if isAdmin();
+      allow update, delete: if false;
+    }
+
+    match /settings/{settingId} {
+      allow read: if isLeader();
+      allow write: if isAdmin();
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

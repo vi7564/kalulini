@@ -125,7 +125,7 @@ export default function NewsPage() {
             </div>
 
             {filteredPosts.length === 0 && (
-              <div className="py-16 text-center text-slate-500 text-sm">
+              <div role="status" aria-live="polite" className="py-16 text-center text-slate-600 text-sm">
                 No articles found matching your criteria.
               </div>
             )}
