@@ -61,6 +61,7 @@ export const Navbar: React.FC = () => {
           </Link>
 
           <nav className="hidden items-center gap-1 lg:flex">
+            <Link href="/" className="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 hover:text-aqua">Home</Link>
             <Link href="/about" className="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 hover:text-aqua">About</Link>
             <Link href="/academics" className="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 hover:text-aqua">Academics</Link>
             <Link href="/admissions" className="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 hover:text-aqua">Admissions</Link>
@@ -73,11 +74,18 @@ export const Navbar: React.FC = () => {
                 <ChevronDown className="h-4 w-4" />
               </button>
               {activeDropdown === 'about-menu' && (
-                <div className="absolute left-0 top-full mt-2 w-56 rounded-xl border border-slate-200 bg-white p-2 shadow-soft">
+                <div className="absolute left-0 top-full mt-2 w-72 rounded-xl border border-slate-200 bg-white p-2 shadow-soft">
                   <Link href="/student-life" onClick={closeMenus} className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-100"><Users className="h-4 w-4 text-aqua" /> Student Life</Link>
                   <Link href="/facilities" onClick={closeMenus} className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-100"><Building className="h-4 w-4 text-aqua" /> Facilities</Link>
-                  <Link href="/news" onClick={closeMenus} className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-100"><BookOpen className="h-4 w-4 text-aqua" /> News</Link>
-                  <Link href="/events" onClick={closeMenus} className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-100"><FileText className="h-4 w-4 text-aqua" /> Events</Link>
+                  <Link href="/news" onClick={closeMenus} className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-100"><BookOpen className="h-4 w-4 text-aqua" /> News & Updates</Link>
+                  <Link href="/events" onClick={closeMenus} className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-100"><FileText className="h-4 w-4 text-aqua" /> Events & Calendar</Link>
+                  <Link href="/gallery" onClick={closeMenus} className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-100"><FileText className="h-4 w-4 text-aqua" /> Gallery</Link>
+                  <Link href="/media-center" onClick={closeMenus} className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-100"><FileText className="h-4 w-4 text-aqua" /> Media Center</Link>
+                  <Link href="/downloads" onClick={closeMenus} className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-100"><FileText className="h-4 w-4 text-aqua" /> Downloads</Link>
+                  <Link href="/faqs" onClick={closeMenus} className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-100"><FileText className="h-4 w-4 text-aqua" /> FAQs</Link>
+                  <Link href="/contact" onClick={closeMenus} className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-100"><FileText className="h-4 w-4 text-aqua" /> Contact</Link>
+                  <Link href="/virtual-tour" onClick={closeMenus} className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-100"><FileText className="h-4 w-4 text-aqua" /> Virtual Tour</Link>
+                  <Link href="/sdgs" onClick={closeMenus} className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-100"><FileText className="h-4 w-4 text-aqua" /> Our Impact</Link>
                 </div>
               )}
             </div>
@@ -108,13 +116,21 @@ export const Navbar: React.FC = () => {
       {mobileMenuOpen && (
         <div className="border-t border-slate-200 bg-white px-4 py-4 shadow-soft lg:hidden">
           <div className="flex flex-col gap-2">
+            <Link href="/" onClick={closeMenus} className="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Home</Link>
             <Link href="/about" onClick={closeMenus} className="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">About</Link>
             <Link href="/academics" onClick={closeMenus} className="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Academics</Link>
             <Link href="/admissions" onClick={closeMenus} className="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Admissions</Link>
             <Link href="/student-life" onClick={closeMenus} className="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Student Life</Link>
             <Link href="/facilities" onClick={closeMenus} className="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Facilities</Link>
-            <Link href="/news" onClick={closeMenus} className="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">News</Link>
-            <Link href="/events" onClick={closeMenus} className="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Events</Link>
+            <Link href="/news" onClick={closeMenus} className="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">News & Updates</Link>
+            <Link href="/events" onClick={closeMenus} className="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Events & Calendar</Link>
+            <Link href="/gallery" onClick={closeMenus} className="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Gallery</Link>
+            <Link href="/media-center" onClick={closeMenus} className="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Media Center</Link>
+            <Link href="/downloads" onClick={closeMenus} className="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Downloads</Link>
+            <Link href="/faqs" onClick={closeMenus} className="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">FAQs</Link>
+            <Link href="/contact" onClick={closeMenus} className="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Contact</Link>
+            <Link href="/virtual-tour" onClick={closeMenus} className="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Virtual Tour</Link>
+            <Link href="/sdgs" onClick={closeMenus} className="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Our Impact</Link>
             <Link href={currentUser ? '/portal' : '/login'} onClick={closeMenus} className="mt-2 inline-flex items-center justify-center gap-2 rounded-lg bg-aqua px-4 py-3 text-sm font-bold uppercase tracking-wide text-white"> <ShieldCheck className="h-4 w-4" /> {currentUser ? 'Open Portal' : 'Student Portal'} </Link>
           </div>
         </div>
