@@ -43,8 +43,26 @@ export default function SignupPage() {
         },
         body: JSON.stringify({ displayName: displayName.trim(), requestedRole }),
       });
-      const result = await response.json() as { error?: string };
-      if (!response.ok) throw new Error(result.error || 'Unable to submit the access request.');
+
+      let result: { error?: string } | null = null;
+      const contentType = response.headers.get('content-type') || '';
+      if (contentType.includes('application/json')) {
+        try {
+          result = await response.json();
+        } catch {
+          result = null;
+        }
+      }
+
+      if (!response.ok) {
+        const fallbackMessage =
+          response.status === 404
+            ? 'Access registration endpoint (/api/auth/register-request) not found (404).'
+            : response.status >= 500
+            ? `Registration server error (${response.status}). Check server logs and Firebase Admin credentials.`
+            : `Unable to submit the access request (HTTP ${response.status}).`;
+        throw new Error(result?.error || fallbackMessage);
+      }
       registrationCommitted = true;
       try {
         await signOut(auth);

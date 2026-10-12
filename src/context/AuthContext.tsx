@@ -139,10 +139,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         method: 'POST',
         headers: { Authorization: `Bearer ${await credential.user.getIdToken()}` },
       });
-      const sessionResult = await response.json() as { error?: string };
+
+      let sessionResult: { error?: string } | null = null;
+      const contentType = response.headers.get('content-type') || '';
+      if (contentType.includes('application/json')) {
+        try {
+          sessionResult = await response.json();
+        } catch {
+          sessionResult = null;
+        }
+      }
+
       if (!response.ok) {
         await fbSignOut(auth);
-        throw new Error(sessionResult.error || 'Your account is not authorized to access the portal.');
+        const fallbackMessage =
+          response.status === 404
+            ? 'Authentication endpoint (/api/auth/session) not found (404). Check if backend API routes are supported on your deployment host.'
+            : response.status >= 500
+            ? `Authentication server error (${response.status}). Check server logs and Firebase Admin credentials.`
+            : `Unable to establish a portal session (HTTP ${response.status}).`;
+        throw new Error(sessionResult?.error || fallbackMessage);
       }
       setCurrentUser(profile);
       return profile.role;
