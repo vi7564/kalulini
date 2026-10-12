@@ -22,7 +22,7 @@ export const StudentLifeSection: React.FC = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Card 1: Sports */}
-          <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-premium hover:border-aqua-300 transition-all">
+          <div className="bg-white rounded-2xl p-6 border border-slate-200/90 shadow-sm hover:shadow-md hover:border-aqua-400 transition-all duration-300">
             <div className="w-12 h-12 rounded-xl bg-amber-50 border border-amber-200 text-amber-700 flex items-center justify-center mb-4">
               <Trophy className="w-6 h-6" />
             </div>
@@ -41,7 +41,7 @@ export const StudentLifeSection: React.FC = () => {
           </div>
 
           {/* Card 2: Clubs & Societies */}
-          <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-premium hover:border-aqua-300 transition-all">
+          <div className="bg-white rounded-2xl p-6 border border-slate-200/90 shadow-sm hover:shadow-md hover:border-aqua-400 transition-all duration-300">
             <div className="w-12 h-12 rounded-xl bg-aqua-50 border border-aqua-200 text-aqua-700 flex items-center justify-center mb-4">
               <Compass className="w-6 h-6" />
             </div>
@@ -60,7 +60,7 @@ export const StudentLifeSection: React.FC = () => {
           </div>
 
           {/* Card 3: Boarding Houses */}
-          <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-premium hover:border-aqua-300 transition-all">
+          <div className="bg-white rounded-2xl p-6 border border-slate-200/90 shadow-sm hover:shadow-md hover:border-aqua-400 transition-all duration-300">
             <div className="w-12 h-12 rounded-xl bg-slate-100 border border-slate-200 text-slate-800 flex items-center justify-center mb-4">
               <ShieldCheck className="w-6 h-6" />
             </div>

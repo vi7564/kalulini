@@ -34,7 +34,7 @@ export const FacilitiesSection: React.FC = () => {
           {FACILITIES_DATA.map((fac) => (
             <div
               key={fac.id}
-              className="bg-slate-50/70 rounded-2xl overflow-hidden border border-slate-200 hover:border-aqua-400 transition-all shadow-sm hover:shadow-premium flex flex-col group"
+              className="bg-white rounded-2xl overflow-hidden border border-slate-200/90 hover:border-aqua-400 hover:shadow-md transition-all duration-300 shadow-sm flex flex-col group"
             >
               <div className="h-44 overflow-hidden relative">
                 <img

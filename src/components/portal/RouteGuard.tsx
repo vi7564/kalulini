@@ -6,15 +6,15 @@ import { useAuth } from '@/context/AuthContext';
 
 export function RouteGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
-  const { currentUser } = useAuth();
+  const { currentUser, loading } = useAuth();
 
   useEffect(() => {
-    if (!currentUser) {
+    if (!loading && !currentUser) {
       router.replace('/login');
     }
-  }, [currentUser, router]);
+  }, [currentUser, loading, router]);
 
-  if (!currentUser) {
+  if (loading || !currentUser) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-slate-950 text-slate-100">
         <div className="space-y-3 text-center">

@@ -31,16 +31,16 @@ export const HeroSection: React.FC = () => {
             </p>
 
             {/* Value Proposition Pills */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 text-xs text-slate-300">
-              <div className="flex items-center gap-2 bg-charcoal-800/60 p-2.5 rounded-lg border border-charcoal-700/80">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 text-xs text-slate-200">
+              <div className="flex items-center gap-2.5 bg-charcoal-800/90 p-3 rounded-xl border border-charcoal-700">
                 <CheckCircle2 className="w-4 h-4 text-aqua-400 shrink-0" />
                 <span>KNEC & CBC Compliant</span>
               </div>
-              <div className="flex items-center gap-2 bg-charcoal-800/60 p-2.5 rounded-lg border border-charcoal-700/80">
+              <div className="flex items-center gap-2.5 bg-charcoal-800/90 p-3 rounded-xl border border-charcoal-700">
                 <CheckCircle2 className="w-4 h-4 text-gold-400 shrink-0" />
                 <span>Modern Science Labs</span>
               </div>
-              <div className="flex items-center gap-2 bg-charcoal-800/60 p-2.5 rounded-lg border border-charcoal-700/80">
+              <div className="flex items-center gap-2.5 bg-charcoal-800/90 p-3 rounded-xl border border-charcoal-700">
                 <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
                 <span>Dedicated Faculty</span>
               </div>
@@ -50,7 +50,7 @@ export const HeroSection: React.FC = () => {
             <div className="flex flex-wrap items-center gap-4 pt-4">
               <Link
                 href="/admissions/apply"
-                className="px-6 py-3.5 rounded-xl bg-gold-400 hover:bg-gold-500 text-charcoal-950 font-bold text-sm tracking-wide shadow-institution flex items-center gap-2 transition-all hover:scale-105"
+                className="px-6 py-3.5 rounded-xl bg-gold-400 hover:bg-gold-500 text-charcoal-950 font-bold text-sm tracking-wide shadow-md flex items-center gap-2 transition-all hover:scale-105"
               >
                 <GraduationCap className="w-4 h-4" />
                 Apply for 2026 Admissions
@@ -77,9 +77,6 @@ export const HeroSection: React.FC = () => {
           {/* Right Column: Hero Visual Showcase */}
           <div className="lg:col-span-5 relative">
             <div className="relative mx-auto max-w-md lg:max-w-none">
-              {/* Decorative Frame */}
-              <div className="absolute -inset-1.5 bg-gradient-to-r from-aqua-500 to-gold-400 rounded-3xl blur-md opacity-30 group-hover:opacity-100 transition duration-1000" />
-              
               <div className="relative rounded-2xl overflow-hidden border-2 border-slate-700/80 bg-charcoal-900 shadow-2xl">
                 <img
                   src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1000&q=80"
@@ -92,10 +89,10 @@ export const HeroSection: React.FC = () => {
                   <div className="flex items-center justify-between">
                     <div>
                       <span className="text-[10px] font-bold uppercase tracking-wider text-gold-400">
-                        Academic Distinction (Sample Data)
+                        Academic Distinction
                       </span>
                       <h4 className="text-white font-bold text-sm">
-                        9.35 Mean Score &bull; B+ Average
+                        Consistent Academic Excellence
                       </h4>
                       <p className="text-[11px] text-slate-300">
                         Over 90% direct university qualification rate

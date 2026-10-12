@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 import { requireAdminRequest, publicUserProfile } from '@/lib/firebase-admin';
 
 export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 export async function GET(request: Request) {
   try {

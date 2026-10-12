@@ -4,18 +4,20 @@ import { useMemo, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { PortalLayout } from '@/components/portal/PortalLayout';
 import { RouteGuard } from '@/components/portal/RouteGuard';
-import { Mail, Send, PencilLine, X, CheckCheck, CircleDot } from 'lucide-react';
+import { Mail, Send, PencilLine, X, Check, CircleDot } from 'lucide-react';
 
-const inbox = [
+type Message = { id: number; sender: string; subject: string; preview: string; time: string; unread?: boolean };
+
+const inbox: Message[] = [
   { id: 1, sender: 'Class Teacher', subject: 'Revision reminder', preview: 'Your Physics revision plan is due before Friday.', time: '09:12 AM', unread: true },
   { id: 2, sender: 'Principal', subject: 'Assembly schedule', preview: 'The school assembly is moved to the main hall.', time: 'Yesterday', unread: true },
   { id: 3, sender: 'Accounts Office', subject: 'Fee statement update', preview: 'Your fee profile has been reconciled and verified.', time: 'Mon', unread: false },
   { id: 4, sender: 'Dean of Studies', subject: 'CAT results uploaded', preview: 'Your Chemistry CAT mark is now available online.', time: 'Sun', unread: false }
 ];
 
-const sent = [
-  { id: 5, sender: 'You', subject: 'Request for extra math session', preview: 'Kindly confirm a make-up session for Friday.', time: '08:10 AM', unread: false },
-  { id: 6, sender: 'You', subject: 'Parent reminder', preview: 'I will be attending the science fair this weekend.', time: 'Yesterday', unread: false }
+const sent: Message[] = [
+  { id: 5, sender: 'You', subject: 'Request for extra math session', preview: 'Kindly confirm a make-up session for Friday.', time: '08:10 AM' },
+  { id: 6, sender: 'You', subject: 'Parent reminder', preview: 'I will be attending the science fair this weekend.', time: 'Yesterday' }
 ];
 
 export default function StudentMessagesPage() {
@@ -68,7 +70,7 @@ export default function StudentMessagesPage() {
                   <span>{message.time}</span>
                   {tab === 'inbox' && message.unread && (
                     <button type="button" onClick={() => markAsRead(message.id)} className="inline-flex items-center gap-1 rounded-lg bg-emerald-100 px-2 py-1 font-semibold text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300">
-                      <CheckCheck className="h-3 w-3" /> Read
+                      <Check className="h-3 w-3" /> Read
                     </button>
                   )}
                 </div>

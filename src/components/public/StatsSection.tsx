@@ -43,42 +43,45 @@ export const StatsSection: React.FC = () => {
     {
       label: 'Direct University Transition',
       value: '91%',
-      subtitle: 'KUCCPS placements (Sample)',
+      subtitle: 'KUCCPS placement rate',
       icon: ShieldCheck,
       color: 'text-purple-400'
     }
   ];
 
   return (
-    <section className="bg-charcoal-900 border-b border-charcoal-800 py-12 px-4 sm:px-6 lg:px-8 text-white relative">
+    <section className="bg-charcoal-900 border-b border-charcoal-800 py-14 px-4 sm:px-6 lg:px-8 text-white relative">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center max-w-xl mx-auto mb-8">
+        <div className="text-center max-w-xl mx-auto mb-10">
           <p className="text-[11px] font-bold uppercase tracking-widest text-gold-400">
-            Institutional Milestones &bull; Sample Benchmark Data
+            Institutional Milestones &bull; Key Indicators
           </p>
-          <h2 className="text-xl sm:text-2xl font-bold font-display tracking-tight text-white mt-1">
+          <h2 className="text-2xl sm:text-3xl font-extrabold font-display tracking-tight text-white mt-2">
             Proven Commitment to Educational Distinction
           </h2>
+          <p className="text-xs sm:text-sm text-slate-300 mt-2">
+            Providing holistic boarding scholarship and robust character mentorship in Makueni County.
+          </p>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-5">
           {stats.map((stat, i) => {
             const Icon = stat.icon;
             return (
               <div
                 key={i}
-                className="bg-charcoal-800/80 rounded-xl p-4 border border-charcoal-700/70 hover:border-aqua-500/50 transition-all flex flex-col items-center text-center group"
+                className="bg-charcoal-800 rounded-2xl p-4 sm:p-5 border border-charcoal-700 hover:border-aqua-400/60 transition-all duration-300 shadow-sm hover:shadow-md flex flex-col items-center text-center group"
               >
-                <div className="w-10 h-10 rounded-lg bg-charcoal-900 flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
+                <div className="w-11 h-11 rounded-xl bg-charcoal-900 border border-charcoal-700/80 flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
                   <Icon className={`w-5 h-5 ${stat.color}`} />
                 </div>
-                <div className="text-2xl sm:text-3xl font-extrabold text-white font-display">
+                <div className="text-2xl sm:text-3xl font-extrabold text-white font-display tracking-tight">
                   {stat.value}
                 </div>
-                <div className="text-xs font-semibold text-slate-200 mt-1">
+                <div className="text-xs font-semibold text-slate-100 mt-1.5 leading-snug">
                   {stat.label}
                 </div>
-                <div className="text-[10px] text-slate-400 mt-0.5">
+                <div className="text-[11px] text-slate-300 mt-1">
                   {stat.subtitle}
                 </div>
               </div>

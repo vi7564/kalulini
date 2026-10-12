@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Camera, Save, UserRound } from 'lucide-react';
 import { PortalLayout } from '@/components/portal/PortalLayout';
 import { RouteGuard } from '@/components/portal/RouteGuard';
@@ -13,11 +13,18 @@ export default function PortalProfilePage() {
 
   const [form, setForm] = useState({
     displayName: currentUser?.displayName || 'Student Name',
-    email: currentUser?.email || 'student@kaluliniboys.ac.ke',
     phoneNumber: currentUser?.phoneNumber || '+254 712 345 678',
-    role: currentUser?.role || 'STUDENT',
     bio: 'Dedicated scholar with a strong interest in science, leadership and community service.'
   });
+
+  useEffect(() => {
+    if (!currentUser) return;
+    setForm((previous) => ({
+      ...previous,
+      displayName: currentUser.displayName,
+      phoneNumber: currentUser.phoneNumber || '',
+    }));
+  }, [currentUser]);
 
   const initials = useMemo(() => {
     return (form.displayName || 'User')
@@ -28,15 +35,17 @@ export default function PortalProfilePage() {
       .toUpperCase();
   }, [form.displayName]);
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    updateCurrentProfile({
-      displayName: form.displayName,
-      email: form.email,
-      phoneNumber: form.phoneNumber,
-      photoURL: currentUser?.photoURL
-    });
-    showToast('success', 'Profile saved', 'Your portal profile was updated successfully.');
+    try {
+      await updateCurrentProfile({
+        displayName: form.displayName,
+        phoneNumber: form.phoneNumber,
+      });
+      showToast('success', 'Profile saved', 'Your portal profile was updated successfully.');
+    } catch (error) {
+      showToast('error', 'Profile not saved', error instanceof Error ? error.message : 'Please try again.');
+    }
   };
 
   return (
@@ -58,7 +67,7 @@ export default function PortalProfilePage() {
 
               <div className="mt-4 space-y-1">
                 <p className="text-xl font-black text-slate-900 dark:text-white">{form.displayName}</p>
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-aqua-600 dark:text-aqua-400">{form.role}</p>
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-aqua-600 dark:text-aqua-400">{currentUser?.role}</p>
               </div>
 
               <div className="mt-5 w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-left dark:border-slate-700 dark:bg-slate-800/70">
@@ -88,26 +97,21 @@ export default function PortalProfilePage() {
               </label>
 
               <label className="space-y-2 text-sm font-semibold text-slate-700 dark:text-slate-200">
-                <span>Role</span>
-                <select
-                  value={form.role}
-                  onChange={(event) => setForm((prev) => ({ ...prev, role: event.target.value as typeof prev.role }))}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-aqua-500 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-                >
-                  <option value="STUDENT">Student</option>
-                  <option value="TEACHER">Teacher</option>
-                  <option value="PARENT">Parent</option>
-                  <option value="ADMIN">Administrator</option>
-                </select>
+                <span>Role (managed by the school)</span>
+                <input
+                  value={currentUser?.role || ''}
+                  readOnly
+                  className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2.5 text-sm text-slate-600 outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
+                />
               </label>
 
               <label className="space-y-2 text-sm font-semibold text-slate-700 dark:text-slate-200 md:col-span-2">
                 <span>Email address</span>
                 <input
                   type="email"
-                  value={form.email}
-                  onChange={(event) => setForm((prev) => ({ ...prev, email: event.target.value }))}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-aqua-500 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                  value={currentUser?.email || ''}
+                  readOnly
+                  className="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-2.5 text-sm text-slate-600 outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
                 />
               </label>
 

@@ -1,11 +1,9 @@
 'use client';
 
-import * as React from 'react';
 import { motion, useReducedMotion, type HTMLMotionProps } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
-export interface RevealProps extends Omit<HTMLMotionProps<'div'>, 'children'> {
-  children: React.ReactNode;
+export interface RevealProps extends Omit<HTMLMotionProps<'div'>, 'initial' | 'whileInView' | 'viewport' | 'transition'> {
   delay?: number;
   y?: number;
   once?: boolean;

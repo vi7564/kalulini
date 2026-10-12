@@ -78,9 +78,9 @@ export default function AboutPage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-              <div className="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+              <div className="bg-white p-8 rounded-2xl border border-slate-200/90 shadow-sm hover:shadow-md hover:border-aqua-400 transition-all duration-300 flex flex-col justify-between">
                 <div>
-                  <div className="w-12 h-12 rounded-xl bg-aqua-50 border border-aqua-200 text-aqua-600 flex items-center justify-center mb-4">
+                  <div className="w-12 h-12 rounded-xl bg-aqua-50 border border-aqua-200 text-aqua-700 flex items-center justify-center mb-4">
                     <Compass className="w-6 h-6" />
                   </div>
                   <h3 className="text-xl font-bold text-charcoal-900 mb-2">Our Vision</h3>
@@ -90,9 +90,9 @@ export default function AboutPage() {
                 </div>
               </div>
 
-              <div className="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+              <div className="bg-white p-8 rounded-2xl border border-slate-200/90 shadow-sm hover:shadow-md hover:border-aqua-400 transition-all duration-300 flex flex-col justify-between">
                 <div>
-                  <div className="w-12 h-12 rounded-xl bg-amber-50 border border-amber-200 text-gold-500 flex items-center justify-center mb-4">
+                  <div className="w-12 h-12 rounded-xl bg-amber-50 border border-amber-200 text-gold-600 flex items-center justify-center mb-4">
                     <Target className="w-6 h-6" />
                   </div>
                   <h3 className="text-xl font-bold text-charcoal-900 mb-2">Our Mission</h3>
@@ -104,7 +104,7 @@ export default function AboutPage() {
             </div>
 
             {/* Core Values */}
-            <div id="values" className="bg-charcoal-900 text-white rounded-3xl p-8 sm:p-12 border border-charcoal-800">
+            <div id="values" className="bg-charcoal-900 text-white rounded-3xl p-8 sm:p-12 border border-charcoal-800 shadow-xl">
               <div className="text-center max-w-lg mx-auto mb-8">
                 <span className="text-xs font-bold uppercase tracking-widest text-gold-400">
                   Institutional Pillars
@@ -121,9 +121,9 @@ export default function AboutPage() {
                   { title: 'Innovation & Research', desc: 'Empirical experimentation, STEM problem-solving, and creative enterprise.' },
                   { title: 'Mutual Respect & Brotherhood', desc: 'Respecting peers, honoring faculty, and fostering inclusive school fellowship.' }
                 ].map((val, i) => (
-                  <div key={i} className="bg-charcoal-800/80 p-5 rounded-xl border border-charcoal-700/80">
-                    <h4 className="text-gold-400 font-bold text-sm mb-1">{val.title}</h4>
-                    <p className="text-xs text-slate-300 leading-relaxed">{val.desc}</p>
+                  <div key={i} className="bg-charcoal-800 p-5 rounded-2xl border border-charcoal-700 hover:border-aqua-400/60 transition-all duration-300 shadow-sm">
+                    <h4 className="text-gold font-bold text-sm mb-1.5">{val.title}</h4>
+                    <p className="text-xs text-slate-200 leading-relaxed">{val.desc}</p>
                   </div>
                 ))}
               </div>
@@ -135,10 +135,10 @@ export default function AboutPage() {
         <section id="leadership" className="py-16 bg-white border-b border-slate-200">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-xl mx-auto mb-12">
-              <span className="text-xs font-bold uppercase tracking-widest text-aqua-600">
+              <span className="text-xs font-bold uppercase tracking-widest text-aqua-700">
                 Governance & Faculty
               </span>
-              <h2 className="text-2xl sm:text-3xl font-bold font-display text-charcoal-900 mt-1">
+              <h2 className="text-2xl sm:text-3xl font-extrabold font-display text-charcoal-900 mt-1">
                 Institutional Leadership & Board of Management
               </h2>
               <p className="text-xs sm:text-sm text-slate-600 mt-2">
@@ -150,7 +150,7 @@ export default function AboutPage() {
               {LEADERSHIP_PROFILES.map((leader) => (
                 <div
                   key={leader.id}
-                  className="bg-slate-50 rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-premium transition-all flex flex-col group"
+                  className="bg-white rounded-2xl overflow-hidden border border-slate-200/90 shadow-sm hover:shadow-md hover:border-aqua-400 transition-all duration-300 flex flex-col group"
                 >
                   <div className="h-64 overflow-hidden relative">
                     <img
@@ -161,16 +161,16 @@ export default function AboutPage() {
                   </div>
                   <div className="p-5 flex-1 flex flex-col justify-between">
                     <div>
-                      <h4 className="font-bold text-sm text-charcoal-900 group-hover:text-aqua-700 transition-colors">
+                      <h4 className="font-bold text-sm text-charcoal-900 group-hover:text-aqua-800 transition-colors">
                         {leader.name}
                       </h4>
                       <p className="text-xs font-bold text-aqua-700 uppercase mt-0.5">
                         {leader.role}
                       </p>
-                      <p className="text-[11px] text-gold-600 font-semibold mt-1">
+                      <p className="text-[11px] text-gold-700 font-semibold mt-1">
                         {leader.credentials}
                       </p>
-                      <p className="text-xs text-slate-600 mt-3 leading-relaxed">
+                      <p className="text-xs sm:text-sm text-slate-600 mt-3 leading-relaxed">
                         {leader.bio}
                       </p>
                     </div>

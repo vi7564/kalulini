@@ -57,7 +57,7 @@ export const PortalSidebar: React.FC<PortalSidebarProps> = ({ collapsed, onToggl
 
   let navItems: NavItem[] = [...commonNav];
 
-  if (role === 'ADMIN' || role === 'SUPER_ADMIN') {
+  if (role === 'ADMIN' || role === 'SUPER_ADMIN' || role === 'PRINCIPAL') {
     navItems = [
       ...commonNav,
       { name: 'Admin Dashboard', href: '/portal/admin', icon: LayoutDashboard },
@@ -105,7 +105,7 @@ export const PortalSidebar: React.FC<PortalSidebarProps> = ({ collapsed, onToggl
   const roleLabels: Record<UserRole, { label: string; color: string }> = {
     SUPER_ADMIN: { label: 'Super Admin', color: 'bg-rose-500/20 text-rose-300 border-rose-500/30' },
     ADMIN: { label: 'Administrator', color: 'bg-aqua-500/20 text-aqua-300 border-aqua-500/30' },
-    PRINCIPAL: { label: 'Principal', color: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30' },
+    PRINCIPAL: { label: 'Principal', color: 'bg-rose-500/20 text-rose-300 border-rose-500/30' },
     TEACHER: { label: 'Teacher', color: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30' },
     STUDENT: { label: 'Student', color: 'bg-blue-500/20 text-blue-300 border-blue-500/30' },
     PARENT: { label: 'Parent', color: 'bg-purple-500/20 text-purple-300 border-purple-500/30' },
@@ -143,15 +143,9 @@ export const PortalSidebar: React.FC<PortalSidebarProps> = ({ collapsed, onToggl
 
       {!collapsed && (
         <div className="border-b border-slate-800 px-3 py-3">
-          <div className="mb-2 flex items-center justify-between">
-            <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-400">Active mode</span>
-            <span className={`rounded-full border px-2 py-0.5 text-[9px] font-bold uppercase ${roleLabels[role].color}`}>
-              {roleLabels[role].label}
-            </span>
-          </div>
-          <div className="rounded-xl border border-slate-700 bg-slate-900 px-2.5 py-2 text-[10px] text-slate-300">
-            Authenticated as {roleLabels[role].label}
-          </div>
+          <span className={`rounded-full border px-2 py-1 text-[9px] font-bold uppercase ${roleLabels[role].color}`}>
+            {roleLabels[role].label}
+          </span>
         </div>
       )}
 

@@ -60,9 +60,9 @@ export const PrincipalMessageSection: React.FC = () => {
               </p>
 
               <div className="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-t border-slate-100">
-                <div className="flex items-center gap-2 text-xs font-medium text-slate-500">
+                <div className="flex items-center gap-2 text-xs font-semibold text-slate-700">
                   <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                  <span>Configurable Administrative Notice &bull; Office of the Principal</span>
+                  <span>Official Welcome Address &bull; Office of the Principal</span>
                 </div>
 
                 <Link

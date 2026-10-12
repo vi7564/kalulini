@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 import { getFirebaseAdminApp, requireActiveProfile } from '@/lib/firebase-admin';
 
 export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 const SESSION_DURATION_MS = 5 * 24 * 60 * 60 * 1000;
 

@@ -159,20 +159,20 @@ export default function DownloadsPage() {
               {documents.map((doc, idx) => (
                 <div
                   key={idx}
-                  className="bg-slate-50 p-5 rounded-2xl border border-slate-200 hover:border-aqua-400 hover:bg-white transition-all flex items-center justify-between gap-4 group"
+                  className="bg-white p-5 rounded-2xl border border-slate-200/90 hover:border-aqua-400 hover:shadow-md transition-all duration-300 shadow-sm flex items-center justify-between gap-4 group"
                 >
                   <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-aqua-50 border border-aqua-200 text-aqua-700 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                    <div className="w-12 h-12 rounded-xl bg-aqua-50 border border-aqua-200 flex items-center justify-center text-aqua-700 shrink-0 group-hover:scale-105 group-hover:bg-aqua-600 group-hover:text-white transition-all">
                       <FileText className="w-6 h-6" />
                     </div>
                     <div>
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-600">
                         {doc.category} &bull; PDF
                       </span>
-                      <h3 className="font-bold text-sm text-charcoal-900 group-hover:text-aqua-700 transition-colors">
+                      <h3 className="font-bold text-sm text-charcoal-900 group-hover:text-aqua-800 transition-colors leading-snug">
                         {doc.title}
                       </h3>
-                      <span className="text-xs text-slate-500 mt-1 block">File Size: {doc.size}</span>
+                      <span className="text-xs text-slate-600 mt-1 block font-medium">File Size: {doc.size}</span>
                     </div>
                   </div>
 
@@ -180,7 +180,7 @@ export default function DownloadsPage() {
                     href={doc.filePath}
                     download={doc.fileName}
                     onClick={(e) => handleDownloadClick(e, doc)}
-                    className="p-2.5 rounded-xl bg-white border border-slate-200 text-charcoal-800 hover:bg-aqua-600 hover:text-white hover:border-aqua-600 transition-all shadow-sm shrink-0"
+                    className="p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-charcoal-800 hover:bg-aqua-600 hover:text-white hover:border-aqua-600 transition-all shadow-sm shrink-0"
                     title={`Download ${doc.title}`}
                     aria-label={`Download ${doc.title}`}
                   >

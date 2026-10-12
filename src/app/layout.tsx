@@ -32,10 +32,6 @@ export const metadata: Metadata = {
   alternates: {
     canonical: '/',
   },
-  icons: {
-    icon: '/favicon.svg',
-    shortcut: '/favicon.svg',
-  },
   robots: {
     index: true,
     follow: true,
@@ -59,6 +55,11 @@ export const metadata: Metadata = {
     title: 'Kalulini Boys High School',
     description: 'Official website of Kalulini Boys High School in Kibwezi, Makueni County, Kenya.',
     images: ['/image1.webp'],
+  },
+  icons: {
+    icon: '/favicon.svg',
+    shortcut: '/favicon.svg',
+    apple: '/favicon.svg',
   },
 };
 

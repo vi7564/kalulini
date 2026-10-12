@@ -4,6 +4,7 @@ import { NextResponse } from 'next/server';
 import { getFirebaseAdminApp } from '@/lib/firebase-admin';
 
 export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 const requestableRoles = ['APPLICANT', 'STUDENT', 'PARENT', 'TEACHER', 'STAFF'] as const;
 

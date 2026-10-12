@@ -4,11 +4,11 @@
 
 :root {
   --background: #f8fafc;
-  --foreground: #1F1F1F;
-  --aqua: #00BFFF;
+  --foreground: #1e293b;
+  --aqua: #007fa3;
   --charcoal: #1F1F1F;
-  --grey: #A9A9A9;
-  --gold: #FFD700;
+  --grey: #64748b;
+  --gold: #d9a900;
 }
 
 .dark {
@@ -20,10 +20,41 @@ html {
   scroll-behavior: smooth;
 }
 
+@keyframes galleryFade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes tourFadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  @keyframes galleryFade {
+    from { opacity: 0.65; }
+    to { opacity: 1; }
+  }
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-inter), sans-serif;
+}
+
+a:focus-visible {
+  outline: 2px solid #00a8d6;
+  outline-offset: 3px;
+}
+
+a:not([class*="bg-"]):hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 @layer base {

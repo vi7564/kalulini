@@ -5,6 +5,7 @@ import { isPendingStatus, requiredRoleLink, validateRoleAssignment } from '@/lib
 import { requireAdminRequest } from '@/lib/firebase-admin';
 
 export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 type UserAction = 'approve' | 'reject' | 'deactivate' | 'activate' | 'set-role';
 

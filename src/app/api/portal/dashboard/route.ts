@@ -5,6 +5,7 @@ import { getAcademicTerm, getLinkedStudentIds, isInAcademicTerm, parentOwnsStude
 import { getFirebaseAdminApp, requireActiveProfile, verifyRequestToken } from '@/lib/firebase-admin';
 
 export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 type StudentDocument = DocumentData & { id: string };
 
